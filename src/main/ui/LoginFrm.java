@@ -1,9 +1,7 @@
 package ui;
 
 import controller.MainController;
-import dao.DaoSet;
 import dao.DaoUser;
-import ui.MainFrm;
 import vo.UserVO;
 
 import java.awt.BorderLayout;

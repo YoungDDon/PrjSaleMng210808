@@ -64,9 +64,9 @@ public class MainFrm extends BasicFrm {
     private ImageIcon resizeImg(ImageIcon img){
         int imgW = img.getIconWidth();
         int imgH = img.getIconHeight();
-        int dynamicH = imgH*230/imgW;
+        int dynamicH = imgH*80/imgW;
         Image image = img.getImage();
-        Image newImg = image.getScaledInstance(230, dynamicH,
+        Image newImg = image.getScaledInstance(80, dynamicH,
                 java.awt.Image.SCALE_SMOOTH);
         return img = new ImageIcon(newImg);
     }

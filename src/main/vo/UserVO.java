@@ -32,14 +32,10 @@ public class UserVO {
         this.id = id;
     }
 
-    public int getUserID() {
-        return userID;
-    }
-
+    public String getPassword() {return password;}
     public String getUserName() {
         return userName;
     }
-
     public String getId() {
         return id;
     }

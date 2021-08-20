@@ -4,6 +4,7 @@ import dao.DaoUser;
 import vo.UserVO;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,35 +16,47 @@ public class PnlUser extends JPanel {
     private JPasswordField rePw;
     private JTextField tfSearch;
     private JTable table;
+    private  DefaultTableModel model;
+
     public PnlUser() {
         setLayout(null);
         DaoUser dao = new DaoUser();
+//        USER_NAME           VARCHAR2(100)
+//        PASSWORD            VARCHAR2(4000)
+//        CREATED_ON          DATE
+//        QUOTA               NUMBER
+//        PRODUCTS            CHAR(1)
+//        EXPIRES_ON          DATE
+//        ADMIN_USER          CHAR(1)
+//        ID                  VARCHAR2(20)
+        model = new DefaultTableModel(new String[]{"USER_ID","ID","이름","입사일","QUOTA","상품유무",
+                "퇴사일","관리자 여부"}, 0);
 
-        JLabel lblNewLabel = new JLabel("\uC0AC\uC6A9\uC790 \uBAA9\uB85D");
-        lblNewLabel.setFont(new Font("맑은 고딕 Semilight", Font.PLAIN, 20));
-        lblNewLabel.setBounds(518, 10, 113, 37);
-        add(lblNewLabel);
+        JLabel lbUserList = new JLabel("\uC0AC\uC6A9\uC790 \uBAA9\uB85D");
+        lbUserList.setFont(new Font("맑은 고딕 Semilight", Font.PLAIN, 20));
+        lbUserList.setBounds(300, 25, 113, 37);
+        add(lbUserList);
 
-        JLabel lblNewLabel_1 = new JLabel("\uC774\uB984");
-        lblNewLabel_1.setFont(new Font("굴림", Font.PLAIN, 17));
-        lblNewLabel_1.setBounds(63, 57, 62, 28);
-        add(lblNewLabel_1);
+        JLabel lbName= new JLabel("\uC774\uB984");
+        lbName.setFont(new Font("굴림", Font.PLAIN, 17));
+        lbName.setBounds(63, 57, 62, 28);
+        add(lbName);
 
-        JLabel lblNewLabel_2 = new JLabel("ID");
-        lblNewLabel_2.setFont(new Font("굴림", Font.PLAIN, 17));
-        lblNewLabel_2.setBounds(63, 135, 57, 15);
-        add(lblNewLabel_2);
+        JLabel lbId = new JLabel("ID");
+        lbId.setFont(new Font("굴림", Font.PLAIN, 17));
+        lbId.setBounds(63, 135, 57, 15);
+        add(lbId);
 
-        JLabel lblNewLabel_3 = new JLabel("Paswword");
-        lblNewLabel_3.setFont(new Font("굴림", Font.PLAIN, 17));
-        lblNewLabel_3.setBounds(63, 203, 88, 15);
-        add(lblNewLabel_3);
+        JLabel lbPw = new JLabel("Paswword");
+        lbPw.setFont(new Font("굴림", Font.PLAIN, 17));
+        lbPw.setBounds(63, 203, 88, 15);
+        add(lbPw);
 
-        JLabel lblNewLabel_4 = new JLabel("RePass");
-        lblNewLabel_4.setFont(new Font("굴림", Font.PLAIN, 17));
-        lblNewLabel_4.setToolTipText("");
-        lblNewLabel_4.setBounds(63, 286, 57, 15);
-        add(lblNewLabel_4);
+        JLabel rePassW = new JLabel("RePass");
+        rePassW.setFont(new Font("굴림", Font.PLAIN, 17));
+        rePassW.setToolTipText("");
+        rePassW.setBounds(63, 286, 57, 15);
+        add(rePassW);
 
         tfName = new JTextField();
         tfName.setBounds(163, 61, 116, 21);
@@ -82,8 +95,7 @@ public class PnlUser extends JPanel {
                 if(pw.equals("")) return;
                 if(rePw.equals("")) return;
                 if(!pw.equals(rePass)) return;
-                dao.registUser(new UserVO(name, id, pw));
-            }
+                dao.registUser(new UserVO(name, id, pw));}
         });
         btnRegi.setBounds(68, 342, 211, 23);
         add(btnRegi);
@@ -95,18 +107,29 @@ public class PnlUser extends JPanel {
 
         tfSearch = new JTextField();
         tfSearch.setColumns(10);
-        tfSearch.setBounds(515, 62, 116, 21);
+        tfSearch.setBounds(300, 62, 140, 21);
         add(tfSearch);
 
-        JButton btnSearch = new JButton("New button");
-        btnSearch.setBounds(676, 61, 97, 23);
+        JButton btnSearch = new JButton("Search");
+        btnSearch.setBounds(505, 61, 130, 23);
         add(btnSearch);
 
-        JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setBounds(344, 109, 496, 253);
+
+        table = new JTable(new DefaultTableModel());
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setBounds(300, 109, 550, 253);
         add(scrollPane);
 
-        table = new JTable();
-        scrollPane.setColumnHeaderView(table);
+
+        btnSearch.addActionListener(e -> {
+            DefaultTableModel model = (DefaultTableModel) table.getModel();
+            while(table.getRowCount() > 0) {
+                model.removeRow(0);
+            }
+            String srch = tfSearch.getText();
+            model = dao.getUserList(model, srch);
+            table.setModel(model);
+            model.fireTableDataChanged();
+        });
     }
 }
