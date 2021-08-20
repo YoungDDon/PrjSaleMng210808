@@ -6,11 +6,14 @@ import org.jdatepicker.JDatePicker;
 
 import javax.swing.*;
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class PnlSale extends JPanel {
     private JDatePicker dPic;
     private JTextField tfSearch;
     private JTable table;
+
 
     public PnlSale() {
         setLayout(null);
@@ -36,9 +39,9 @@ public class PnlSale extends JPanel {
         add(lbPdImg);
 
         DaoProduct daoProduct = new DaoProduct();
-        JComboBox cbPd = new JComboBox(daoProduct.getPdList(cbCate.getSelectedItem().toString()));
-        cbPd.setBounds(147, 41, 209, 19);
-        add(cbPd);
+        JComboBox cbProd = new JComboBox(daoProduct.getProdList(cbCate.getSelectedItem().toString()));
+        cbProd.setBounds(147, 41, 209, 19);
+        add(cbProd);
 
         tfSearch = new JTextField();
         tfSearch.setBounds(463, 41, 136, 21);
@@ -81,5 +84,23 @@ public class PnlSale extends JPanel {
         JDatePicker dPic = new JDatePicker();
         dPic.setBounds(76, 6, 262, 26);
         add(dPic);
+
+
+        cbCate.addActionListener(new ActionListener() {
+            Object[] oArr = null;
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String cateW = cbCate.getSelectedItem().toString();
+                cbProd.removeAllItems();
+                try {
+                    oArr = daoProduct.getProdList(cateW);
+                } catch (Exception e1) {}
+                if(oArr.length>0)
+                    for (int i = 0; i < oArr.length; i++) {
+                        cbProd.addItem(oArr[i]);
+                    }
+            }
+        });
     }
 }
+

@@ -21,7 +21,7 @@ public class DaoProduct extends DaoSet {
         return result;
     }
 
-    public Object[] getPdList(String cate) {
+    public Object[] getProdList(String cate) {
         Object[] result = null;
         String sql = "select product_name from demo_product_info where category = ?";
         ArrayList list = new ArrayList();
