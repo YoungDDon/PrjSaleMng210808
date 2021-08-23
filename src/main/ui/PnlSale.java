@@ -5,7 +5,9 @@ import dao.DaoProduct;
 import org.jdatepicker.JDatePicker;
 
 import javax.swing.*;
-import java.awt.Color;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.Border;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -13,6 +15,7 @@ public class PnlSale extends JPanel {
     private JDatePicker dPic;
     private JTextField tfSearch;
     private JTable table;
+    private JLabel lbProdImg, getProdImgBack;
 
 
     public PnlSale() {
@@ -34,9 +37,9 @@ public class PnlSale extends JPanel {
         cbCusName.setBounds(411, 8, 188, 19);
         add(cbCusName);
 
-        JLabel lbPdImg = new JLabel("제품 이미지");
-        lbPdImg.setBounds(715, 43, 57, 15);
-        add(lbPdImg);
+        JLabel lbProdImgTitle = new JLabel("제품 이미지");
+        lbProdImgTitle.setBounds(700, 43, 90, 15);
+        add(lbProdImgTitle);
 
         DaoProduct daoProduct = new DaoProduct();
         JComboBox cbProd = new JComboBox(daoProduct.getProdList(cbCate.getSelectedItem().toString()));
@@ -44,7 +47,7 @@ public class PnlSale extends JPanel {
         add(cbProd);
 
         tfSearch = new JTextField();
-        tfSearch.setBounds(463, 41, 136, 21);
+        tfSearch.setBounds(488, 41, 111, 20);
         add(tfSearch);
         tfSearch.setColumns(10);
 
@@ -67,40 +70,72 @@ public class PnlSale extends JPanel {
         btnPay.setBounds(490, 360, 109, 23);
         add(btnPay);
 
-        JTextPane tpSum = new JTextPane();
-        tpSum.setBackground(Color.GRAY);
-        tpSum.setBounds(12, 360, 243, 30);
-        add(tpSum);
+        JTextField tfTotal = new JTextField();
+        tfTotal.setBackground(Color.GRAY);
+        tfTotal.setBounds(12, 360, 243, 30);
+        add(tfTotal);
 
-        JTextPane tpPrice = new JTextPane();
-        tpPrice.setBounds(365, 41, 92, 19);
-        add(tpPrice);
+        JTextField tfPrice = new JTextField();
+        String pId = cbProd.getSelectedItem().toString().split("/")[0];
+        tfPrice.setText(daoProduct.getProdPrice(pId));
+        tfPrice.setBounds(365, 41, 55, 20);
+        add(tfPrice);
 
-        JPanel panel = new JPanel();
-        panel.setBounds(611, 70, 257, 280);
-        add(panel);
-        setLayout(null);
+        ImageIcon img = daoProduct.getProdImg(pId);
+        lbProdImg = new JLabel(resizeImg(img));
+        lbProdImg.setBounds(606, 70, 249, 279);
+        add(lbProdImg);
+
+        JLabel ProdImgBack= new JLabel();
+        ProdImgBack.setBounds(606, 70, 249, 279);
+        add(ProdImgBack);
+        ProdImgBack.setOpaque(true);
+        ProdImgBack.setBackground(Color.WHITE);
+        Border bevelBorder = new BevelBorder(BevelBorder.RAISED,
+                    Color.LIGHT_GRAY, Color.LIGHT_GRAY.darker(),
+                    Color.LIGHT_GRAY, Color.LIGHT_GRAY.brighter());
+        ProdImgBack.setBorder(bevelBorder);
 
         JDatePicker dPic = new JDatePicker();
         dPic.setBounds(76, 6, 262, 26);
         add(dPic);
 
+        JTextField tfAmount = new JTextField();
+        tfAmount.setBounds(422,41,64,20);
+        add(tfAmount);
+        tfAmount.setColumns(10);
 
-        cbCate.addActionListener(new ActionListener() {
-            Object[] oArr = null;
-            @Override
-            public void actionPerformed(ActionEvent e) {
+
+        cbCate.addActionListener(e -> {
+                Object[] oArr = null;
                 String cateW = cbCate.getSelectedItem().toString();
                 cbProd.removeAllItems();
                 try {
                     oArr = daoProduct.getProdList(cateW);
-                } catch (Exception e1) {}
-                if(oArr.length>0)
+                } catch (Exception e1) { }
+                if (oArr.length > 0) {
                     for (int i = 0; i < oArr.length; i++) {
                         cbProd.addItem(oArr[i]);
                     }
+                }
+            });
+        cbProd.addActionListener(e->{
+            if (cbProd.getSelectedItem() != null) {
+                    String pId1 = cbProd.getSelectedItem().toString().split("/")[0];
+                    tfPrice.setText(daoProduct.getProdPrice(pId1));
+                    lbProdImg.setIcon(daoProduct.getProdImg(pId1));
             }
+            tfAmount.setText("");
+            tfTotal.setText("");
         });
     }
+    private ImageIcon resizeImg(ImageIcon img){
+        int imgW = img.getIconWidth();
+        int imgH = img.getIconHeight();
+        int dynamicH = imgH*230/imgW;
+        Image image = img.getImage();
+        Image newimg = image.getScaledInstance(230, dynamicH,
+                java.awt.Image.SCALE_SMOOTH);
+        return img = new ImageIcon(newimg);
+    }
 }
-

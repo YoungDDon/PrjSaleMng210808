@@ -100,10 +100,10 @@ public class PnlUser extends JPanel {
         btnRegi.setBounds(68, 342, 211, 23);
         add(btnRegi);
 
-        JLabel lblNewLabel_5 = new JLabel("\uC0AC\uC6A9\uC790 \uB4F1\uB85D");
-        lblNewLabel_5.setFont(new Font("맑은 고딕 Semilight", Font.PLAIN, 20));
-        lblNewLabel_5.setBounds(148, 10, 113, 37);
-        add(lblNewLabel_5);
+        JLabel lbUserRegi = new JLabel("\uC0AC\uC6A9\uC790 \uB4F1\uB85D");
+        lbUserRegi.setFont(new Font("맑은 고딕 Semilight", Font.PLAIN, 20));
+        lbUserRegi.setBounds(148, 10, 120, 37);
+        add(lbUserRegi);
 
         tfSearch = new JTextField();
         tfSearch.setColumns(10);
